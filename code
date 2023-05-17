@@ -1,0 +1,347 @@
+#include <iostream>
+#include <bits/stdc++.h>
+using namespace std;
+#define faster ios_base::sync_with_stdio(false);cin.tie(nullptr);cout.tie(nullptr);
+class Book{
+    string title,author,category;
+    int numOfPages;
+public:
+    Book(string t, string a, string c, int num){
+        title=t;
+        author=a;
+        category=c;
+        numOfPages=num;
+    }
+    Book(){};
+    void setTitle(string ti){
+        title=ti;
+    }
+    void setAuthor(string au) {
+        author=au;
+    }
+    void setCategory(string ca){
+        category=ca;
+    }
+    void setNumOfpages(int n){
+        numOfPages=n;
+    }
+    string getTitle(){
+        return title;
+    }
+    string getAuthor(){
+        return author;
+    }
+    string getCategory(){
+        return category;
+    }
+    int getNumOfpages(){
+        return numOfPages;
+    }
+    void print(Book&b){
+        cout << "the title of the book is " << b.getTitle() << '\n';
+        cout << "the author of the book is " << b.getAuthor() << '\n';
+        cout << "the category of the book is " << b.getCategory() << '\n';
+        cout << "the number of pages of the book is " << b.getNumOfpages() << '\n';
+    }
+
+    bool operator<(const Book& b){
+        if((b.title.length())< title.length()){
+            return true;
+        } else
+            return false;
+    }
+
+};
+struct Node
+{
+public:
+    Node(Book &book){}
+
+    Book data;
+    Node* left, * right;
+
+    template<class t>
+    Node(Book value)
+    {
+        data = value;
+        left = right = NULL;
+    }
+};
+
+class BST {
+public:
+    Node *root;
+    BST() {
+        root = NULL;
+    }
+
+    // template<class t>
+    Node* Insert(Node* r, Book item)
+    {
+        if (r == NULL)
+        {
+            Node *newnode = new Node(item);
+            r = newnode;
+        }
+
+        else if (item< r->data)
+            r->left = Insert(r->left, item);
+        else
+            r->right= Insert(r->right, item);
+
+        return r;
+    }
+    //template<class t>
+    void Insert(Book item)
+    {
+        root= Insert(root, item);
+    }
+    Node* Search_bytitle(Node* r, string key)
+    {
+        if (r == NULL)
+            return NULL;
+        else if (r->data.getTitle() == key)
+            return r;
+        else if (key < r->data.getTitle())
+            return	Search_bytitle(r->left, key);
+        else
+            return Search_bytitle(r->right, key);
+    }
+
+    bool Search_bytitle(string key)
+    {
+        Node* result = Search_bytitle(root, key);
+
+        if (result == NULL)
+            return false;
+        else
+            return true;
+    }
+    Node* Search_byauthor(Node* r, string key)
+    {
+        if (r == NULL)
+            return NULL;
+        else if (r->data.getAuthor() == key)
+            return r;
+        else if (key < r->data.getAuthor())
+            return	Search_byauthor(r->left, key);
+        else
+            return Search_byauthor(r->right, key);
+    }
+
+    bool Search_byauthor(string key)
+    {
+        Node* result = Search_byauthor(root, key);
+
+        if (result == NULL)
+            return false;
+        else
+            return true;
+    }
+    Node* Search_bycategory(Node* r, string key)
+    {
+        if (r == NULL)
+            return NULL;
+        else if (r->data.getCategory() == key)
+            return r;
+        else if (key < r->data.getCategory())
+            return	Search_bycategory(r->left, key);
+        else
+            return Search_bycategory(r->right, key);
+    }
+
+    bool Search_bycategory(string key)
+    {
+        Node* result = Search_byauthor(root, key);
+
+        if (result == NULL)
+            return false;
+        else
+            return true;
+    }
+
+    Node* Findmin(Node* r)
+    {
+        if (r == NULL)
+            return NULL;
+        else if (r->left == NULL)
+            return r;
+        else
+            return Findmin(r->left);
+    }
+
+    Node* Findmax(Node* r)
+    {
+        if (r == NULL)
+            return NULL;
+        else if (r->right == NULL)
+            return r;
+        else
+            return Findmax(r->right);
+    }
+//traverse ascendingly
+    void traverseAsc(Node* r) // left->root -> right
+    {
+        if (r == NULL)
+            return;
+        traverseAsc(r->left);
+        cout <<"the title ofe the book is "<< r->data.getTitle() << '\n';
+        cout <<"the author ofe the book is "<< r->data.getAuthor() << '\n';
+        cout<<"the category of the book is "<<r->data.getCategory()<<'\n';
+        cout<<"the number of pages of the book is "<<r->data.getNumOfpages()<<'\n';
+        traverseAsc(r->right);
+    }
+
+//traverse descendingly
+    void traverseDesc(Node* r) // left--> right->root
+    {
+        if (r == NULL)
+            return;
+        traverseDesc(r->left);
+        traverseDesc(r->right);
+        cout <<"the title ofe the book is "<< r->data.getTitle() << '\n';
+        cout <<"the author ofe the book is "<< r->data.getAuthor() << '\n';
+        cout<<"the category of the book is "<<r->data.getCategory()<<'\n';
+        cout<<"the number of pages of the book is "<<r->data.getNumOfpages()<<'\n';
+    }
+
+    Node*  remove(Node* r, string key)
+    {
+        if (r == NULL)
+            return NULL;
+        if (key < r->data.getTitle())
+            r->left = remove(r->left, key);
+        else if (key > r->data.getTitle())
+            r->right =remove(r->right, key);
+        else
+        {
+            if (r->left == NULL && r->right == NULL)
+                r = NULL;
+            else if (r->left != NULL && r->right == NULL)
+            {
+                r->data = r->left->data;
+                delete r->left;
+                r->left = NULL;
+            }
+            else if (r->left == NULL && r->right != NULL)
+            {
+                r->data = r->right->data;
+                delete r->right;
+                r->right = NULL;
+            }
+            else
+            {
+                Node* max = Findmax(r->left);
+                r->data = max->data;
+                r->left=remove(r->left, max->data.getTitle());
+
+            }
+
+        }
+        return r;
+    }
+
+};
+void readBooks(istream&i,BST&b){
+    string line;
+    ifstream file("books.txt");
+    if (!file)
+    {
+        cerr << "Cannot open file.\n";
+
+    }
+
+    BST tree;
+
+    while (getline(file, line))
+    {
+        int n;
+        file>>n;
+        Book bo[n];
+        for (int j = 0; j <n ; ++j) {
+
+            bo[j].setTitle(line);
+            getline(file, line);
+            bo[j].setAuthor(line);
+            getline(file, line);
+            bo[j].setCategory(line);
+
+            int pages;
+            file >> pages;
+            bo[j].setNumOfpages(pages);
+            file.ignore(1000, '\n');
+
+            tree.Insert(bo[j]);
+        }}
+}
+void display_menu(){
+    cout<<"please select option from following menu "<<'\n';
+    cout<<"1-display all books sotred by title ascendingly "<<'\n';
+    cout<<"2-display all books sotred by title descendingly "<<'\n';
+    cout<<"3-remove book by title "<<'\n';
+    cout<<"4-add new book "<<'\n';
+    cout<<"5-search for a book by title "<<'\n';
+    cout<<"6-display certain author's books "<<'\n';
+    cout<<"7-display certain category's books "<<'\n';
+    cout<<"8-Exit "<<'\n';
+}
+
+int main(){
+    faster
+    display_menu();
+    BST tree;
+    int c;
+    cin>>c;
+    while(c!=8) {
+        cin >> c;
+        switch (c) {
+            case 1: {
+                tree.traverseAsc(tree.root);
+                display_menu();
+            }
+            case 2: {
+                tree.traverseDesc(tree.root);
+                display_menu();
+            }
+            case 3: {
+                cout << "please enter the title of the book you want to remove " << '\n';
+                string title;
+                cin >> title;
+                tree.remove(tree.root, title);
+                display_menu();
+            }
+            case 4: {
+                Book b;
+                tree.Insert(b);
+                display_menu();
+            }
+            case 5: {
+                string title;
+                cout << "please enter the title of the book you want to search for " << '\n';
+                cin >> title;
+                tree.Search_bytitle(tree.root, title);
+                display_menu();
+            }
+            case 6: {
+                string author_name;
+                cout << "please enter the author name you want to search for " << '\n';
+                cin >> author_name;
+                tree.Search_byauthor(tree.root, author_name);
+                display_menu();
+
+            }
+            case 7: {
+                string category;
+                cout << "please enter the category you want to search for " << '\n';
+                cin >> category;
+                tree.Search_bycategory(tree.root, category);
+                display_menu();
+
+            }
+            case 8: {
+                break;
+            }
+        }
+    }
+    return 0;
+}
